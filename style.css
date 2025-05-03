@@ -303,7 +303,53 @@ article.active {
 }
 
 
+<style>
+    .section {
+        margin-top: 40px;
+    }
 
+    .section h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 5px;
+    }
+
+    .entry {
+        margin-bottom: 30px;
+        padding-left: 15px;
+        border-left: 4px solid #3498db;
+    }
+
+    .entry h4 {
+        font-size: 1.2rem;
+        margin: 0;
+        color: #34495e;
+    }
+
+    .entry span {
+        font-size: 0.9rem;
+        color: #888;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .entry ul {
+        padding-left: 20px;
+        margin: 0;
+    }
+
+    .entry ul li {
+        margin-bottom: 6px;
+        color: #2c3e50;
+    }
+
+    .simple-list {
+        padding-left: 20px;
+        color: #2c3e50;
+    }
+</style>
 
 
 /*-----------------------------------*\
