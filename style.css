@@ -639,7 +639,6 @@ main {
 
 .service-icon-box img {
     margin: auto;
-    filter: brightness(0) saturate(100%) invert(84%) sepia(67%) saturate(754%) hue-rotate(1deg) brightness(104%) contrast(101%);
 }
 
 .service-content-box {
