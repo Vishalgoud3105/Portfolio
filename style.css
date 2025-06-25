@@ -337,6 +337,13 @@ main {
   #SIDEBAR
 \*-----------------------------------*/
 
+.layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
 .sidebar {
     margin-bottom: 15px;
     max-height: unset;
