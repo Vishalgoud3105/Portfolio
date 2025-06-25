@@ -503,7 +503,41 @@ main {
     color: var(--light-gray);
 }
 
+/* Sidebar fixed width */
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
 
+/* Main content area */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-x: hidden;
+}
+
+/* Responsive behavior for mobile */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar,
+  .main-content {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .sidebar-info {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .avatar-box {
+    margin-bottom: 15px;
+  }
+}
 
 
 
