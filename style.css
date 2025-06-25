@@ -385,7 +385,7 @@ main {
     font-weight: var(--fw-500);
     letter-spacing: -0.25px;
     margin-bottom: 10px;
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 .info-content .title {
@@ -400,7 +400,7 @@ main {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-left: 60px;
+    margin-left: 50px;
 }
 
 .info_more-btn {
