@@ -358,6 +358,15 @@ main {
     gap: 15px;
 }
 
+.sidebar-info_more {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  height: auto !important;
+  transform: none !important;
+  padding-top: 15px;
+}
+
 
 .info-content .name {
     color: var(--white-2);
