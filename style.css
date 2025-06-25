@@ -339,13 +339,15 @@ main {
 
 .sidebar {
     margin-bottom: 15px;
-    max-height: 112px;
-    overflow: hidden;
-    transition: var(--transition-2);
+    max-height: unset;
+    overflow: visible;
+/*     transition: var(--transition-2); */
 }
 
 .sidebar.active {
-    max-height: 405px;
+    opacity: 1;
+    visibility: visible;
+/*     max-height: 405px; */
 }
 
 .sidebar-info {
@@ -380,6 +382,10 @@ main {
 }
 
 .info_more-btn {
+  display: none;
+}
+
+/* .info_more-btn {
     position: absolute;
     top: -15px;
     right: -15px;
@@ -415,7 +421,7 @@ main {
 
 .info_more-btn span {
     display: none;
-}
+} */
 
 .sidebar-info_more {
     opacity: 0;
