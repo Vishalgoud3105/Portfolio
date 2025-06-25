@@ -161,3 +161,11 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
     });
 }
+
+// Avatar slide animation on button click
+const avatarBox = document.querySelector('.avatar-box.animate-avatar');
+const toggleBtn = document.getElementById('avatarToggleBtn');
+
+toggleBtn.addEventListener('click', () => {
+  avatarBox.classList.toggle('active');
+});
