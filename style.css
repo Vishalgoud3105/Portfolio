@@ -2137,3 +2137,42 @@ textarea.form-input::-webkit-resizer {
     .timeline-text {
         max-width: 700px;
     }
+
+/* === Avatar Slide Animation === */
+.avatar-box.animate-avatar {
+  transform: translateY(-30px); /* Initial upward position */
+  transition: transform 0.6s ease-in-out;
+}
+
+.avatar-box.animate-avatar.active {
+  transform: translateY(0); /* Comes down on toggle */
+}
+
+/* === Toggle Button (Down Arrow) === */
+.arrow-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  color: var(--orange-yellow-crayola);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 999; /* Ensure it's clickable */
+}
+
+/* === Text Centering Between Name, Role & Subtitle === */
+.info-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.info-content .role {
+  font-size: var(--fs-5);
+  font-weight: var(--fw-400);
+  color: var(--orange-yellow-crayola);
+  margin: 10px 0;
+}
