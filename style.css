@@ -205,6 +205,7 @@ article {
     display: none;
 }
 
+
 article.active {
     display: block;
     animation: fade 0.5s ease backwards;
@@ -303,53 +304,7 @@ article.active {
 }
 
 
-<style>
-    .section {
-        margin-top: 40px;
-    }
 
-    .section h3 {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        color: #2c3e50;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 5px;
-    }
-
-    .entry {
-        margin-bottom: 30px;
-        padding-left: 15px;
-        border-left: 4px solid #3498db;
-    }
-
-    .entry h4 {
-        font-size: 1.2rem;
-        margin: 0;
-        color: #34495e;
-    }
-
-    .entry span {
-        font-size: 0.9rem;
-        color: #888;
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    .entry ul {
-        padding-left: 20px;
-        margin: 0;
-    }
-
-    .entry ul li {
-        margin-bottom: 6px;
-        color: #2c3e50;
-    }
-
-    .simple-list {
-        padding-left: 20px;
-        color: #2c3e50;
-    }
-</style>
 
 
 /*-----------------------------------*\
@@ -365,6 +320,18 @@ main {
 
 
 
+.quote {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #ccc; /* or whatever fits your theme */
+  line-height: 1.4;
+  margin-top: 6px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+  padding: 0 10px;
+}
 
 /*-----------------------------------*\
   #SIDEBAR
@@ -389,23 +356,6 @@ main {
     gap: 15px;
 }
 
-.avatar-box {
-  background: var(--bg-gradient-onyx);
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
 
 .info-content .name {
     color: var(--white-2);
@@ -963,38 +913,57 @@ main {
  * skills 
  */
 
-.skills-title { margin-bottom: 20px; }
-
-.skills-list { padding: 20px; }
-
-
-.skills-item:not(:last-child) { margin-bottom: 15px; }
-
-.skill .title-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 8px;
+.skill-section {
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
 
-.skill .title-wrapper data {
-  color: var(--light-gray);
-  font-size: var(--fs-7);
-  font-weight: var(--fw-300);
+.parent-skill {
+    width: 200px;
+    height: auto;
+    text-align: center;
+    color: hsl(45, 100%, 72%);
+    margin-bottom: 20px;
 }
 
-.skill-progress-bg {
-  background: var(--jet);
-  width: 100%;
-  height: 8px;
-  border-radius: 10px;
+.skill {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    box-shadow: 10px 10px 19px #1c1e22, -10px -10px 19px #262a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(#FFD700 10%, #212428 0);
 }
 
-.skill-progress-fill {
-  background: var(--text-gradient-yellow);
-  height: 100%;
-  border-radius: inherit;
+.progress {
+    width: 90%;
+    height: 90%;
+    border-radius: 100%;
+    background: linear-gradient(280deg, #1e2024, #23272b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.progress-number {
+    color: hsl(45, 100%, 72%);
+    font-size: 2rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+
 
 /*-----------------------------------*\
   #PORTFOLIO
