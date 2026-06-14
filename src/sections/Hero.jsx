@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
+import ModelViewer from '../components/ModelViewer'
 
 /* ── Three.js particle fields ── */
 function ParticleField() {
@@ -44,47 +45,6 @@ function PurpleField() {
   )
 }
 
-/* ── CSS Hologram Orb (placeholder until ai-brain.glb is ready) ── */
-function HologramOrb() {
-  return (
-    <div className="relative w-[380px] h-[380px] flex items-center justify-center">
-      {/* Concentric rings */}
-      {[380, 300, 220].map((size, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full border border-cyber-cyan/20"
-          style={{
-            width: size, height: size,
-            animation: `spin ${8 + i * 3}s linear infinite ${i % 2 ? 'reverse' : ''}`,
-            boxShadow: i === 0 ? '0 0 30px rgba(0,245,255,0.06)' : 'none',
-          }}
-        />
-      ))}
-      {/* Pulsing core */}
-      <div
-        className="w-28 h-28 rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(0,245,255,0.25) 0%, rgba(124,58,237,0.15) 50%, transparent 70%)',
-          border: '1px solid rgba(0,245,255,0.4)',
-          boxShadow: '0 0 60px rgba(0,245,255,0.3), inset 0 0 40px rgba(0,245,255,0.1)',
-          animation: 'pulse-glow 3s ease-in-out infinite',
-        }}
-      />
-      {/* Scan line */}
-      <div
-        className="absolute inset-0 rounded-full overflow-hidden pointer-events-none"
-        style={{ animation: 'scan 4s linear infinite' }}
-      >
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyber-cyan/50 to-transparent" />
-      </div>
-      <div className="absolute bottom-[-24px] left-1/2 -translate-x-1/2
-        font-orbitron text-[0.5rem] tracking-[3px] text-cyber-cyan/40 whitespace-nowrap">
-        AI CORE — INITIALIZING
-      </div>
-    </div>
-  )
-}
-
 /* ── Counter ── */
 function Counter({ target, label }) {
   const [val, setVal] = useState(0)
@@ -117,9 +77,22 @@ const fadeUp = (delay = 0) => ({
 
 /* ── Hero ── */
 export default function Hero() {
+  const sectionRef = useRef(null)
+
+  // Scroll progress for the AI brain "awakening" effect
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  // As user scrolls down through hero: model scales up & glows stronger
+  const modelScale   = useTransform(scrollYProgress, [0, 0.6], [0.85, 1.15])
+  const modelOpacity = useTransform(scrollYProgress, [0, 0.15, 0.7], [0.5, 1, 0.3])
+
   return (
     <section
       id="home"
+      ref={sectionRef}
       className="relative min-h-screen flex items-center justify-between px-10 lg:px-20 overflow-hidden"
     >
       {/* Three.js particle background */}
@@ -166,14 +139,34 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── CSS Hologram Orb (will be replaced with ai-brain.glb) ── */}
+      {/* ── AI Brain 3D model — awakens as you scroll ── */}
       <motion.div
         initial={{ opacity: 0, scale: 0.7 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, delay: 1.6, ease: 'easeOut' }}
-        className="relative z-10 hidden lg:flex items-center justify-center flex-shrink-0"
+        style={{ scale: modelScale, opacity: modelOpacity }}
+        className="relative z-10 hidden lg:block w-[420px] h-[420px] flex-shrink-0"
       >
-        <HologramOrb />
+        {/* Drop ai-brain.glb into public/assets/3d/ — renders automatically */}
+        <ModelViewer
+          src="/Portfolio/assets/3d/ai-brain.glb"
+          label="AI BRAIN"
+          alt="Holographic AI brain that awakens on scroll"
+          autoRotate
+          cameraControls={false}
+          exposure="1.2"
+          ringColor="#00f5ff"
+          style={{ width: '100%', height: '100%' }}
+        />
+
+        {/* Neon ring frame */}
+        <div className="absolute inset-0 rounded-full pointer-events-none"
+          style={{ boxShadow: '0 0 80px rgba(0,245,255,0.15), inset 0 0 60px rgba(0,245,255,0.05)' }} />
+
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2
+          font-orbitron text-[0.5rem] tracking-[3px] text-cyber-cyan/50 whitespace-nowrap">
+          SCROLL TO AWAKEN
+        </div>
       </motion.div>
 
       {/* Scroll indicator */}

@@ -1,31 +1,9 @@
 import { motion } from 'framer-motion'
 import { ExternalLink, Download } from 'lucide-react'
 import { certifications } from '../data/portfolio'
+import ModelViewer from '../components/ModelViewer'
 
 const rackUnits = ['PROFILE', 'EXPERIENCE', 'PROJECTS', 'SKILLS', 'CERTS']
-
-function ServerRack() {
-  return (
-    <div className="bg-cyber-card border border-white/5 rounded-xl p-5 space-y-2.5">
-      {rackUnits.map((label, i) => (
-        <motion.div
-          key={label}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: i * 0.1 }}
-          className="flex items-center gap-3 bg-cyber-cyan/[0.03] border border-cyber-cyan/10 rounded px-3 py-2.5
-                     hover:border-cyber-cyan/30 transition-colors duration-300"
-        >
-          <span className="w-2 h-2 rounded-full bg-cyber-cyan shadow-cyan animate-blink shrink-0"
-            style={{ animationDelay: `${i * 0.4}s` }} />
-          <span className="font-orbitron text-[0.58rem] tracking-[3px] text-cyber-cyan flex-1">{label}</span>
-          <div className="h-1 flex-1 bg-gradient-to-r from-cyber-cyan to-cyber-purple rounded-full opacity-60" />
-        </motion.div>
-      ))}
-    </div>
-  )
-}
 
 function CertCard({ cert, index }) {
   return (
@@ -51,7 +29,6 @@ function CertCard({ cert, index }) {
 export default function Resume() {
   return (
     <section id="resume" className="relative min-h-screen bg-cyber-bg2 py-24 overflow-hidden">
-      {/* Radial glows */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-cyber-purple/8 blur-3xl" />
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-cyber-cyan/6 blur-3xl" />
@@ -72,23 +49,54 @@ export default function Resume() {
         </motion.div>
 
         <div className="grid lg:grid-cols-[1fr_2fr] gap-12 items-start">
-          {/* Server rack + actions */}
+          {/* Left: data-server model + rack list + actions */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
+            className="flex flex-col gap-6"
           >
-            <ServerRack />
-            <div className="flex flex-col gap-3 mt-6">
+            {/* Drop data-server.glb into public/assets/3d/ — renders automatically */}
+            <div className="h-64 rounded-xl overflow-hidden border border-cyber-purple/20 bg-cyber-card">
+              <ModelViewer
+                src="/Portfolio/assets/3d/data-server.glb"
+                label="DATA SERVER"
+                alt="Sci-fi data server 3D model"
+                autoRotate
+                cameraControls={false}
+                exposure="0.9"
+                ringColor="#7c3aed"
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+
+            <div className="bg-cyber-card border border-white/5 rounded-xl p-5 space-y-2.5">
+              {rackUnits.map((label, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  className="flex items-center gap-3 bg-cyber-cyan/[0.03] border border-cyber-cyan/10 rounded px-3 py-2.5
+                             hover:border-cyber-cyan/30 transition-colors duration-300"
+                >
+                  <span className="w-2 h-2 rounded-full bg-cyber-cyan shadow-cyan animate-blink shrink-0"
+                    style={{ animationDelay: `${i * 0.4}s` }} />
+                  <span className="font-orbitron text-[0.58rem] tracking-[3px] text-cyber-cyan flex-1">{label}</span>
+                  <div className="h-1 flex-1 bg-gradient-to-r from-cyber-cyan to-cyber-purple rounded-full opacity-60" />
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-3">
               {/* =====================================================
                   RESUME LINK — update this when your resume is ready
-                  Steps:
-                  1. Upload your resume PDF to Google Drive (or put it
-                     in public/assets/ as resume.pdf)
-                  2. Replace the href below with your Google Drive
-                     share link  →  change ?view to ?export=download
-                     OR use: "/Portfolio/assets/resume.pdf"
+                  1. Put resume.pdf in public/assets/ then use:
+                     href="/Portfolio/assets/resume.pdf"
+                  OR use a Google Drive export link.
+                  Replace <button> with <a href="..." download ...>
                   ===================================================== */}
               <button
                 disabled
@@ -107,7 +115,7 @@ export default function Resume() {
             </div>
           </motion.div>
 
-          {/* Certifications grid */}
+          {/* Right: certifications */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}

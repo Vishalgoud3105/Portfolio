@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import ModelViewer from '../components/ModelViewer'
 
 const services = [
   { icon: '⚙', title: 'Machine Learning',  desc: 'Scalable ML models solving real-world problems from structured data.' },
@@ -36,7 +36,6 @@ function RevealBlock({ children, delay = 0, direction = 'up' }) {
 export default function About() {
   return (
     <section id="about" className="relative min-h-screen bg-cyber-bg2 py-24 overflow-hidden">
-      {/* Grid background */}
       <div className="absolute inset-0 bg-grid-cyber bg-[size:50px_50px] opacity-100 pointer-events-none" />
 
       <div className="relative container mx-auto px-6 lg:px-16 max-w-7xl">
@@ -50,7 +49,7 @@ export default function About() {
         </RevealBlock>
 
         <div className="grid lg:grid-cols-[1fr_1.6fr] gap-16 items-start">
-          {/* Left: avatar + info */}
+          {/* Left: avatar + info + holo-panel model */}
           <RevealBlock direction="left" delay={0.1}>
             <div className="flex flex-col items-center">
               {/* Avatar */}
@@ -65,7 +64,7 @@ export default function About() {
               </div>
 
               {/* Info panel */}
-              <div className="w-full bg-cyber-card border border-white/5 rounded-xl p-5 space-y-3">
+              <div className="w-full bg-cyber-card border border-white/5 rounded-xl p-5 space-y-3 mb-6">
                 {[
                   { label: 'LOCATION', val: 'Hyderabad, India' },
                   { label: 'STATUS',   val: null, isStatus: true },
@@ -101,12 +100,25 @@ export default function About() {
                   </a>
                 </div>
               </div>
+
+              {/* Drop holo-panel.glb into public/assets/3d/ — renders automatically */}
+              <div className="w-full h-48 rounded-xl overflow-hidden border border-cyber-cyan/10 bg-cyber-card">
+                <ModelViewer
+                  src="/Portfolio/assets/3d/holo-panel.glb"
+                  label="HOLO PANEL"
+                  alt="Holographic data panel display"
+                  autoRotate
+                  cameraControls={false}
+                  exposure="1.0"
+                  ringColor="#7c3aed"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
             </div>
           </RevealBlock>
 
           {/* Right: bio + services */}
           <RevealBlock direction="right" delay={0.2}>
-            {/* Holographic bio card */}
             <div className="relative bg-cyber-card border border-white/5 rounded-xl p-7 mb-8 overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-cyber-purple via-cyber-cyan to-transparent" />
               <div className="flex items-center gap-2 mb-5">
@@ -123,7 +135,6 @@ export default function About() {
               </p>
             </div>
 
-            {/* Service cards */}
             <div className="grid grid-cols-2 gap-4">
               {services.map(({ icon, title, desc }, i) => (
                 <motion.div

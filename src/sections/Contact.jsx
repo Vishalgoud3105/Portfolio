@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send } from 'lucide-react'
+import ModelViewer from '../components/ModelViewer'
 
 function Terminal() {
   return (
@@ -17,7 +18,7 @@ function Terminal() {
           { cmd: 'locate', val: 'Hyderabad, Telangana, India', isLink: false },
           { cmd: 'open',   val: 'github.com/Vishalgoud3105',   href: 'https://github.com/Vishalgoud3105' },
           { cmd: 'open',   val: 'linkedin.com/in/vishalgoud3105', href: 'https://linkedin.com/in/vishalgoud3105' },
-        ].map(({ cmd, val, href, isLink }, i) => (
+        ].map(({ cmd, val, href }, i) => (
           <p key={i} className="leading-none">
             <span className="text-[#28ca42]">$ </span>
             <span className="text-white/40">{cmd} </span>
@@ -76,21 +77,32 @@ export default function Contact() {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-14">
-          {/* Terminal panel */}
+          {/* Left: terminal + communication console model */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
+            className="flex flex-col gap-6"
           >
             <Terminal />
-            <div className="flex flex-col items-center gap-3 mt-8 opacity-50">
-              <div className="w-px h-16 bg-gradient-to-b from-transparent to-cyber-cyan animate-stream" />
-              <div className="w-px h-10 bg-gradient-to-b from-transparent to-cyber-purple animate-stream" style={{ animationDelay: '0.5s' }} />
+
+            {/* Drop comm-console.glb into public/assets/3d/ — renders automatically */}
+            <div className="h-52 rounded-xl overflow-hidden border border-cyber-cyan/10 bg-cyber-card">
+              <ModelViewer
+                src="/Portfolio/assets/3d/comm-console.glb"
+                label="COMM CONSOLE"
+                alt="Futuristic communication console 3D model"
+                autoRotate
+                cameraControls={false}
+                exposure="1.0"
+                ringColor="#00f5ff"
+                style={{ width: '100%', height: '100%' }}
+              />
             </div>
           </motion.div>
 
-          {/* Form */}
+          {/* Right: contact form */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
