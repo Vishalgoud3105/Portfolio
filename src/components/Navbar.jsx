@@ -40,15 +40,10 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 1.2 }}
-      className={`fixed top-0 left-0 right-0 z-50 h-[70px] flex items-center justify-between px-10
+      className={`fixed top-0 left-0 right-0 z-50 h-[70px] flex items-center justify-end px-10
         transition-all duration-300 border-b border-white/5
         ${scrolled ? 'bg-cyber-bg/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,245,255,0.06)]' : 'bg-transparent'}`}
     >
-      {/* Logo */}
-      <span className="font-orbitron text-xl font-black text-white tracking-widest">
-        VG<span className="text-cyber-cyan">.</span>
-      </span>
-
       {/* Desktop links */}
       <ul className="hidden md:flex items-center gap-1">
         {links.map(({ label, href }) => {

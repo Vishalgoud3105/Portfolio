@@ -53,8 +53,14 @@ export default function About() {
           {/* Left: avatar + info */}
           <RevealBlock direction="left" delay={0.1}>
             <div className="flex flex-col items-center">
-              {/* Avatar */}
-              <div className="relative w-56 h-56 mb-8">
+              {/* Avatar — enters from top, as if drifted down from Hero */}
+              <motion.div
+                className="relative w-56 h-56 mb-8"
+                initial={{ opacity: 0, y: -60, scale: 0.8 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+              >
                 <img
                   src="/Portfolio/assets/img/vishal portfolio icon.png"
                   alt="C.Vishal Goud"
@@ -62,7 +68,7 @@ export default function About() {
                 />
                 <div className="absolute inset-[-8px] rounded-full border border-cyber-cyan/30 animate-spin-slow" />
                 <div className="absolute inset-0 rounded-full shadow-cyan pointer-events-none" />
-              </div>
+              </motion.div>
 
               {/* Info panel */}
               <div className="w-full bg-cyber-card border border-white/5 rounded-xl p-5 space-y-3">

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 
@@ -44,43 +44,112 @@ function PurpleField() {
   )
 }
 
-/* ── CSS Hologram Orb (placeholder until ai-brain.glb is ready) ── */
-function HologramOrb() {
+/*
+  4 concentric rings (outside → inside):
+    Ring 0: 460px  ← outermost
+    Ring 1: 340px  ← profile pic sits inside THIS ring (2nd from outside / 3rd from inside)
+    Ring 2: 220px  ← draws around the pic's outer edge
+    Ring 3: 100px  ← innermost core ring
+
+  Fix: each ring uses TWO divs:
+    outer motion.div  → Framer Motion scale + opacity (scroll driven)
+    inner plain div   → CSS rotate animation
+  This avoids transform conflicts between Framer Motion and CSS keyframes.
+*/
+const RINGS = [
+  { size: 460, color: 'rgba(0,245,255,0.20)',   width: 0.5, dur: 18, rev: false },
+  { size: 340, color: 'rgba(124,58,237,0.25)',  width: 0.5, dur: 13, rev: true  },
+  { size: 220, color: 'rgba(0,245,255,0.28)',   width: 0.5, dur: 9,  rev: false },
+  { size: 100, color: 'rgba(124,58,237,0.30)',  width: 0.5, dur: 6,  rev: true  },
+]
+
+function HologramOrb({ ringScales, ringOpacities, picY, picOpacity, picScale }) {
   return (
-    <div className="relative w-[380px] h-[380px] flex items-center justify-center">
-      {/* Concentric rings */}
-      {[380, 300, 220].map((size, i) => (
-        <div
+    <div style={{ position: 'relative', width: 500, height: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+      {/* Rings — outer motion.div handles scroll (scale/opacity), inner div handles rotation */}
+      {RINGS.map(({ size, color, width, dur, rev }, i) => (
+        <motion.div
           key={i}
-          className="absolute rounded-full border border-cyber-cyan/20"
           style={{
-            width: size, height: size,
-            animation: `spin ${8 + i * 3}s linear infinite ${i % 2 ? 'reverse' : ''}`,
-            boxShadow: i === 0 ? '0 0 30px rgba(0,245,255,0.06)' : 'none',
+            position: 'absolute',
+            width: size,
+            height: size,
+            scale: ringScales[i],
+            opacity: ringOpacities[i],
           }}
-        />
+        >
+          <div style={{
+            width: '100%',
+            height: '100%',
+            borderRadius: '50%',
+            border: `${width}px solid ${color}`,
+            boxShadow: `0 0 14px ${color}, 0 0 28px ${color}`,
+            animation: `heroRing ${dur}s linear infinite ${rev ? 'reverse' : ''}`,
+          }} />
+        </motion.div>
       ))}
-      {/* Pulsing core */}
-      <div
-        className="w-28 h-28 rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(0,245,255,0.25) 0%, rgba(124,58,237,0.15) 50%, transparent 70%)',
-          border: '1px solid rgba(0,245,255,0.4)',
-          boxShadow: '0 0 60px rgba(0,245,255,0.3), inset 0 0 40px rgba(0,245,255,0.1)',
-          animation: 'pulse-glow 3s ease-in-out infinite',
-        }}
-      />
-      {/* Scan line */}
-      <div
-        className="absolute inset-0 rounded-full overflow-hidden pointer-events-none"
-        style={{ animation: 'scan 4s linear infinite' }}
+
+      {/* Ambient glow behind pic */}
+      <div style={{
+        position: 'absolute',
+        width: 280, height: 280,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(0,245,255,0.12) 0%, rgba(124,58,237,0.08) 55%, transparent 75%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Profile picture — centered in the 500px container, inside Ring 1 (340px) */}
+      <motion.div
+        style={{ y: picY, opacity: picOpacity, scale: picScale, position: 'absolute', zIndex: 10 }}
       >
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyber-cyan/50 to-transparent" />
-      </div>
-      <div className="absolute bottom-[-24px] left-1/2 -translate-x-1/2
-        font-orbitron text-[0.5rem] tracking-[3px] text-cyber-cyan/40 whitespace-nowrap">
-        AI CORE — INITIALIZING
-      </div>
+        <div style={{ position: 'relative' }}>
+          <img
+            src="/Portfolio/assets/img/vishal portfolio icon.png"
+            alt="C.Vishal Goud"
+            style={{
+              width: 260, height: 260,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '2.5px solid rgba(0,245,255,0.85)',
+              boxShadow: '0 0 30px rgba(0,245,255,0.45), 0 0 70px rgba(0,245,255,0.15)',
+              display: 'block',
+            }}
+          />
+          {/* Tight spinning accent ring on the pic */}
+          <div style={{
+            position: 'absolute',
+            inset: -8,
+            borderRadius: '50%',
+            border: '1px solid rgba(0,245,255,0.35)',
+            animation: 'heroRing 5s linear infinite',
+          }} />
+        </div>
+      </motion.div>
+
+      {/* Label — below Ring 1 (340px, radius 170px from center of 500px container) */}
+      {/* top: 50% + 170px + 16px gap = just below Ring 1's bottom edge             */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: 'calc(50% + 186px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          opacity: picOpacity,
+          fontFamily: 'Orbitron, sans-serif',
+          fontSize: '0.65rem',
+          letterSpacing: '4px',
+          color: 'rgba(0,245,255,0.95)',
+          whiteSpace: 'nowrap',
+          textShadow: '0 0 10px rgba(0,245,255,0.9), 0 0 24px rgba(0,245,255,0.5)',
+        }}
+      >
+        AIML ENGINEER
+      </motion.div>
+
+      <style>{`
+        @keyframes heroRing { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }
@@ -117,9 +186,38 @@ const fadeUp = (delay = 0) => ({
 
 /* ── Hero ── */
 export default function Hero() {
+  const sectionRef = useRef(null)
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  // Spring wraps raw scroll — lags behind on fast scroll so animation always plays through
+  const sp = useSpring(scrollYProgress, { stiffness: 55, damping: 18, restDelta: 0.0005 })
+
+  // Each ring explodes outward at different speeds
+  const ring0Scale   = useTransform(sp, [0, 0.55], [1, 5.5])
+  const ring0Opacity = useTransform(sp, [0, 0.08, 0.42], [0.55, 0.80, 0])
+
+  const ring1Scale   = useTransform(sp, [0, 0.50], [1, 4.5])
+  const ring1Opacity = useTransform(sp, [0, 0.08, 0.36], [0.70, 0.90, 0])
+
+  const ring2Scale   = useTransform(sp, [0, 0.45], [1, 3.8])
+  const ring2Opacity = useTransform(sp, [0, 0.08, 0.30], [0.75, 0.95, 0])
+
+  const ring3Scale   = useTransform(sp, [0, 0.40], [1, 3.0])
+  const ring3Opacity = useTransform(sp, [0, 0.08, 0.25], [0.80, 1.00, 0])
+
+  // Profile pic drifts down and fades
+  const picY       = useTransform(sp, [0, 0.55], [0, 110])
+  const picOpacity = useTransform(sp, [0, 0.22, 0.48], [1, 1, 0])
+  const picScale   = useTransform(sp, [0, 0.50], [1, 0.82])
+
   return (
     <section
       id="home"
+      ref={sectionRef}
       className="relative min-h-screen flex items-center justify-between px-10 lg:px-20 overflow-hidden"
     >
       {/* Three.js particle background */}
@@ -130,10 +228,10 @@ export default function Hero() {
         </Canvas>
       </div>
 
-      {/* Gradient fade so text stays readable */}
+      {/* Gradient so text stays readable */}
       <div className="absolute inset-0 z-[1] bg-gradient-to-r from-cyber-bg via-cyber-bg/70 to-transparent pointer-events-none" />
 
-      {/* ── Hero text content ── */}
+      {/* ── Hero text ── */}
       <div className="relative z-10 max-w-2xl">
         <motion.div {...fadeUp(0)} className="section-tag mb-4">
           [ AI &amp; MACHINE LEARNING ENGINEER ]
@@ -166,14 +264,20 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* ── CSS Hologram Orb (will be replaced with ai-brain.glb) ── */}
+      {/* ── Hologram Orb ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.7 }}
+        initial={{ opacity: 0, scale: 0.6 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, delay: 1.6, ease: 'easeOut' }}
         className="relative z-10 hidden lg:flex items-center justify-center flex-shrink-0"
       >
-        <HologramOrb />
+        <HologramOrb
+          ringScales={[ring0Scale, ring1Scale, ring2Scale, ring3Scale]}
+          ringOpacities={[ring0Opacity, ring1Opacity, ring2Opacity, ring3Opacity]}
+          picY={picY}
+          picOpacity={picOpacity}
+          picScale={picScale}
+        />
       </motion.div>
 
       {/* Scroll indicator */}
